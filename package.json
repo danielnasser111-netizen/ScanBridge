@@ -1,0 +1,5 @@
+{
+  "name": "scanbridge",
+  "private": true,
+  "scripts": { "start": "node server.js", "build": "node build.js" }
+}

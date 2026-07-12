@@ -1,0 +1,5 @@
+.full-guide[open] { grid-column: 1 / -1; }
+
+@media (max-width: 760px) {
+  .full-guide[open] { grid-column: auto; }
+}
