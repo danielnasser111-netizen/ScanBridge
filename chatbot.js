@@ -14,12 +14,17 @@
     }
   };
 
+  copy.en.role = 'Chat with Milo';
+  copy.ar.role = 'دردش مع مايلو';
+
   const css = `
     @keyframes milo-float { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-7px) rotate(2deg); } }
     @keyframes milo-orbit { to { transform: rotate(360deg); } }
     @keyframes milo-blink { 0%,44%,48%,100% { transform: scaleY(1); } 46% { transform: scaleY(.12); } }
     @keyframes milo-wave { 0%,100% { transform: rotate(-14deg); } 50% { transform: rotate(14deg); } }
     @keyframes milo-think { 50% { transform: scale(1.08); } }
+    @keyframes milo-hint { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-3px); } }
+    @keyframes milo-bubble-pop { to { opacity:0; transform:scale(.78); } }
     .milo-launch { position:fixed; right:16px; bottom:max(14px, env(safe-area-inset-bottom)); z-index:30; display:grid; grid-template-columns:68px auto; gap:.35rem; align-items:center; padding:0; border:0; color:var(--ink); background:transparent; cursor:pointer; font-family:"DM Sans",sans-serif; text-align:left; }
     .milo-companion { position:relative; display:grid; place-items:center; width:68px; height:76px; animation:milo-float 3.8s ease-in-out infinite; filter:drop-shadow(0 10px 12px rgba(23,60,62,.25)); }
     .milo-orbit { position:absolute; width:68px; height:68px; border:1px dashed rgba(245,200,93,.9); border-radius:50%; animation:milo-orbit 16s linear infinite; }
@@ -40,7 +45,8 @@
     .milo-chips { display:flex; flex-wrap:wrap; gap:.45rem; padding:0 1rem .75rem; }.milo-chip { border:1px solid var(--line); padding:.38rem .55rem; border-radius:999px; color:var(--ink); background:transparent; cursor:pointer; font-size:.78rem; font-weight:700; }.milo-form { display:flex; gap:.5rem; padding:.8rem; border-top:1px solid var(--line); }.milo-form input { min-width:0; flex:1; border:1px solid #b9ceca; padding:.65rem; border-radius:8px; color:var(--ink); background:#fff; }.milo-send { border:0; padding:.55rem .7rem; border-radius:8px; color:#fff; background:#173c3e; cursor:pointer; font-weight:700; }
     .dark-mode .milo-bubble,.dark-mode .milo-panel,.dark-mode .milo-messages { border-color:#356063; color:#e6f3ef; background:#10292c; }.dark-mode .milo-bubble span { color:#b8d1ca; }.dark-mode .milo-antenna,.dark-mode .milo-avatar,.dark-mode .milo-avatar::before,.dark-mode .milo-smile { border-color:#e6f3ef; }.dark-mode .milo-eye { background:#e6f3ef; }.dark-mode .milo-antenna::after { box-shadow:0 0 0 4px #10292c; }.dark-mode .milo-message { color:#e6f3ef; background:#21484a; }.dark-mode .milo-message.user { background:#346d6e; }.dark-mode .milo-message a { color:#ffab95; }.dark-mode .milo-form { border-color:#356063; }.dark-mode .milo-form input { border-color:#356063; color:#e6f3ef; background:#17363a; }.dark-mode .milo-chip { border-color:#356063; color:#e6f3ef; }
     html[dir="rtl"] .milo-launch { right:auto; left:16px; text-align:right; }html[dir="rtl"] .milo-bubble { border-radius:13px 13px 3px 13px; }html[dir="rtl"] .milo-launch.milo-open .milo-bubble { transform:translateX(-8px); }html[dir="rtl"] .milo-panel { right:auto; left:22px; direction:rtl; }
-    @media(max-width:600px){.milo-launch{right:10px;bottom:max(8px,env(safe-area-inset-bottom));grid-template-columns:62px}.milo-companion{width:62px;height:70px}.milo-bubble{display:none}.milo-orbit{width:62px;height:62px}.milo-panel{right:14px;bottom:calc(76px + env(safe-area-inset-bottom));height:min(570px,calc(100dvh - 92px))}html[dir="rtl"] .milo-launch{left:10px;right:auto}html[dir="rtl"] .milo-panel{left:14px;right:auto}}
+    .milo-launch.milo-intro-seen .milo-bubble { animation:milo-bubble-pop 180ms ease-in forwards; pointer-events:none; }.milo-launch.milo-intro-hidden .milo-bubble { display:none; }
+    @media(max-width:600px){.milo-launch{right:10px;bottom:max(8px,env(safe-area-inset-bottom));grid-template-columns:62px auto}.milo-companion{width:62px;height:70px}.milo-bubble{display:grid;max-width:124px;padding:.42rem .55rem;animation:milo-hint 2.8s ease-in-out infinite}.milo-bubble strong{font-size:.78rem}.milo-bubble span{font-size:.62rem}.milo-orbit{width:62px;height:62px}.milo-panel{right:14px;bottom:calc(76px + env(safe-area-inset-bottom));height:min(570px,calc(100dvh - 92px))}html[dir="rtl"] .milo-launch{left:10px;right:auto}html[dir="rtl"] .milo-panel{left:14px;right:auto}}
     @media(prefers-reduced-motion:reduce){.milo-companion,.milo-orbit,.milo-eye,.milo-avatar::before{animation:none!important;}}
   `;
   const style = document.createElement('style'); style.textContent = css; document.head.append(style);
@@ -58,6 +64,14 @@
   const chips = $('.milo-chips');
   const input = $('.milo-form input');
   const language = value => /[\u0600-\u06ff]/u.test(value) || document.documentElement.lang === 'ar' ? 'ar' : 'en';
+  if (localStorage.getItem('scanbridge-milo-intro-seen') === 'true') launch.classList.add('milo-intro-hidden');
+
+  function dismissMiloIntro() {
+    if (launch.classList.contains('milo-intro-hidden')) return;
+    localStorage.setItem('scanbridge-milo-intro-seen', 'true');
+    launch.classList.add('milo-intro-seen');
+    window.setTimeout(() => launch.classList.add('milo-intro-hidden'), 190);
+  }
 
   function addMessage(value, isUser = false, links = [], className = '') {
     const bubble = document.createElement('div');
@@ -101,9 +115,11 @@
   }
 
   launch.onclick = () => {
+    const isOpening = panel.hidden;
     panel.hidden = !panel.hidden; launch.classList.toggle('milo-open', !panel.hidden); launch.setAttribute('aria-expanded', String(!panel.hidden));
     if (!panel.hidden && !messages.children.length) addMessage(copy[language('')].hello);
     if (!panel.hidden) input.focus();
+    if (isOpening) dismissMiloIntro();
   };
   $('.milo-close').onclick = () => launch.click();
   $('.milo-form').onsubmit = event => { event.preventDefault(); const value = input.value.trim(); if (value) { addMessage(value, true); input.value = ''; reply(value); } };
