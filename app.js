@@ -25,6 +25,11 @@ const translations = {
   }
 };
 
+translations.ar.openDirectory = 'ابحث في الدليل ←';
+translations.ar.aboutEyebrow = 'كيف بدأت ScanBridge؟';
+translations.ar.aboutTitle = 'بدأت برحلة مخيفة ومن دون مكان واضح للذهاب إليه.';
+translations.ar.aboutText = 'بدأ مشروع ScanBridge بعد أن كاد فتى أن يفقد والده أثناء قيادتهما بعيداً عن المنزل. في لحظة مخيفة، لم يعرفا بسرعة إلى أين يذهبان أو أي مستشفى يمكنه المساعدة. جعل عدم اليقين كل شيء أصعب. بُني ScanBridge لمساعدة العائلات في العثور على خطوة تالية أوضح في المواقف العاجلة أو المربكة، من دون أن يحل محل خدمات الطوارئ أو الأطباء.';
+
 function setLanguage(language) {
   const dictionary = translations[language];
   document.documentElement.lang = language === 'ar' ? 'ar' : 'en';
@@ -92,3 +97,50 @@ navigation.querySelectorAll('a').forEach((link) => {
     menuToggle.setAttribute('aria-expanded', 'false');
   });
 });
+
+navigation.querySelectorAll('button').forEach((button) => {
+  button.addEventListener('click', () => {
+    navigation.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  });
+});
+
+const welcomeDialog = document.querySelector('.welcome-dialog');
+if (welcomeDialog && localStorage.getItem('scanbridge-onboarding-complete') !== 'true') {
+  let selectedLanguage = null;
+  let selectedTheme = null;
+  const continueButton = welcomeDialog.querySelector('.welcome-continue');
+
+  const updateWelcome = () => {
+    welcomeDialog.querySelectorAll('[data-welcome-language]').forEach((button) => {
+      button.classList.toggle('is-selected', button.dataset.welcomeLanguage === selectedLanguage);
+      button.setAttribute('aria-pressed', String(button.dataset.welcomeLanguage === selectedLanguage));
+    });
+    welcomeDialog.querySelectorAll('[data-welcome-theme]').forEach((button) => {
+      button.classList.toggle('is-selected', button.dataset.welcomeTheme === selectedTheme);
+      button.setAttribute('aria-pressed', String(button.dataset.welcomeTheme === selectedTheme));
+    });
+    continueButton.disabled = !(selectedLanguage && selectedTheme);
+  };
+
+  welcomeDialog.querySelectorAll('[data-welcome-language]').forEach((button) => {
+    button.addEventListener('click', () => {
+      selectedLanguage = button.dataset.welcomeLanguage;
+      setLanguage(selectedLanguage);
+      updateWelcome();
+    });
+  });
+  welcomeDialog.querySelectorAll('[data-welcome-theme]').forEach((button) => {
+    button.addEventListener('click', () => {
+      selectedTheme = button.dataset.welcomeTheme;
+      setTheme(selectedTheme);
+      updateWelcome();
+    });
+  });
+  continueButton.addEventListener('click', () => {
+    localStorage.setItem('scanbridge-onboarding-complete', 'true');
+    welcomeDialog.close();
+  });
+  updateWelcome();
+  welcomeDialog.showModal();
+}

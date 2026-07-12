@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="ScanBridge helps families understand, prepare for, access, and follow up after medical imaging in Lebanon." />
     <title>ScanBridge | Understand. Prepare. Follow up.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -65,7 +65,7 @@
           <h2 data-i18n="guidesTitle">Small, clear guides for the moments before a scan.</h2>
           <p data-i18n="guidesText">We’re building practical checklists that replace uncertainty with a simple next step.</p>
         </div>
-        <div class="guide-grid">
+        <div class="guide-grid" aria-label="Featured scan guides">
           <article class="guide-card featured-guide">
             <span class="guide-icon icon-wave" aria-hidden="true">⌁</span>
             <p class="guide-status" data-i18n="firstGuide">First guide coming soon</p>
@@ -95,11 +95,12 @@
           <p data-i18n="centerText">Our directory will help you find imaging centers by location and scan type, with visible verification dates so you know when information was last checked.</p>
           <a class="text-link" href="#feedback" data-open-feedback><span data-i18n="recommendCenter">Recommend a center to include</span> <span aria-hidden="true">→</span></a>
         </div>
-        <aside class="directory-preview" aria-label="Directory preview">
+        <a class="directory-preview directory-preview-link" href="directory.html" aria-label="Open the imaging-center directory">
           <div class="search-field"><span data-i18n="search">Search scan type or city</span> <span aria-hidden="true">⌕</span></div>
           <div class="filter-row"><span>Beirut</span><span>Ultrasound</span></div>
           <div class="center-row"><span class="center-dot"></span><div><strong data-i18n="directoryProgress">Directory in progress</strong><small data-i18n="directoryText">First verified centers are being added.</small></div><span aria-hidden="true">→</span></div>
-        </aside>
+          <span class="directory-open" data-i18n="openDirectory">Search the directory <span aria-hidden="true">→</span></span>
+        </a>
       </section>
 
       <section id="emergency-card" class="section-shell emergency-section">
@@ -124,9 +125,9 @@
       <section id="about" class="section-shell about-section">
         <div class="about-marker" aria-hidden="true">SB</div>
         <div>
-          <p class="eyebrow" data-i18n="aboutEyebrow">Why ScanBridge exists</p>
-          <h2 data-i18n="aboutTitle">Medical imaging is important. Understanding the process should not be hard.</h2>
-          <p data-i18n="aboutText">ScanBridge is a youth-led health-navigation project built to make the imaging journey easier to understand, prepare for, and follow up on. It supports conversations with healthcare professionals; it never replaces them.</p>
+          <p class="eyebrow" data-i18n="aboutEyebrow">How ScanBridge began</p>
+          <h2 data-i18n="aboutTitle">It began with a frightening drive and no clear place to go.</h2>
+          <p data-i18n="aboutText">ScanBridge began after a boy nearly lost his dad while they were driving far from home. In a frightening moment, they could not quickly tell where to go or which hospital could help. The uncertainty made everything harder. ScanBridge was built so families facing an urgent or confusing medical moment can find a clearer next step — without replacing emergency services or doctors.</p>
           <a class="text-link" href="#safety"><span data-i18n="readSafety">Read our safety commitment</span> <span aria-hidden="true">→</span></a>
         </div>
       </section>
@@ -171,6 +172,29 @@
         <button class="button button-primary" type="submit" data-i18n="sendFeedback">Send feedback</button>
         <p class="form-status" role="status" aria-live="polite"></p>
       </form>
+    </dialog>
+    <dialog class="welcome-dialog" aria-labelledby="welcome-title" aria-describedby="welcome-copy">
+      <div class="welcome-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="eyebrow">Welcome to ScanBridge · أهلاً بك</p>
+      <h2 id="welcome-title">Make ScanBridge feel right for you.</h2>
+      <p id="welcome-copy">Choose your language and appearance before you begin.</p>
+      <div class="welcome-options">
+        <div class="welcome-group" role="group" aria-labelledby="welcome-language">
+          <p id="welcome-language">Language · اللغة</p>
+          <div class="welcome-choice-row">
+            <button type="button" class="welcome-choice" data-welcome-language="en">English</button>
+            <button type="button" class="welcome-choice" data-welcome-language="ar" lang="ar">العربية</button>
+          </div>
+        </div>
+        <div class="welcome-group" role="group" aria-labelledby="welcome-theme">
+          <p id="welcome-theme">Appearance · المظهر</p>
+          <div class="welcome-choice-row">
+            <button type="button" class="welcome-choice" data-welcome-theme="light">◐ Light</button>
+            <button type="button" class="welcome-choice" data-welcome-theme="dark">◑ Dark</button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="button button-primary welcome-continue" disabled>Continue · متابعة</button>
     </dialog>
     <script src="app.js"></script>
   </body>
