@@ -26,6 +26,7 @@ const translations = {
 };
 
 translations.ar.openDirectory = 'ابحث في الدليل ←';
+translations.ar.navImpact = 'الأثر والتجربة';
 translations.ar.aboutEyebrow = 'كيف بدأت ScanBridge؟';
 translations.ar.aboutTitle = 'بدأت برحلة مخيفة ومن دون مكان واضح للذهاب إليه.';
 translations.ar.aboutText = 'بدأ مشروع ScanBridge بعد أن كاد فتى أن يفقد والده أثناء قيادتهما بعيداً عن المنزل. في لحظة مخيفة، لم يعرفا بسرعة إلى أين يذهبان أو أي مستشفى يمكنه المساعدة. جعل عدم اليقين كل شيء أصعب. بُني ScanBridge لمساعدة العائلات في العثور على خطوة تالية أوضح في المواقف العاجلة أو المربكة، من دون أن يحل محل خدمات الطوارئ أو الأطباء.';

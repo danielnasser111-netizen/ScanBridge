@@ -1,34 +1,65 @@
 # ScanBridge
 
-ScanBridge is a safety-first health-navigation project that helps families understand, prepare for, access, and follow up after medical imaging. It provides general educational information and never diagnoses, interprets scans, or replaces professional medical care.
+**Understand. Prepare. Follow up.**
 
-## Week 1 foundation
+ScanBridge is a youth-led, safety-first navigation project for medical imaging in Lebanon. It helps patients and families prepare for scans, find imaging services, organise practical emergency information, and navigate the platform with Milo, its bilingual chat assistant.
 
-This first prototype includes:
+> ScanBridge provides general education and navigation only. It does not diagnose conditions, interpret images or reports, recommend treatment, or replace doctors or emergency services.
 
-- A public homepage and project positioning
-- Planned ScanPrep guide, center-directory, and emergency-card sections
-- A plain-language safety commitment
-- An early feedback form that stores entries locally in the browser
+## What is live in the pilot
 
-## Open locally
+- 6 patient-friendly ScanPrep guides, including contrast-material guidance
+- 58 source-linked imaging facilities across Lebanon
+- English and Arabic support, with light and dark modes
+- Emergency preparation card, generated privately in the browser
+- Milo, a safety-bounded Gemini-powered navigation assistant
+- Public Impact & Pilot page with transparent baseline metrics
 
-Open `index.html` in a browser. No build step or external dependencies are needed beyond the optional web fonts.
+## Why it exists
 
-## Run live Milo
+ScanBridge began after a frightening drive in which a family could not quickly work out where to go for help. The project is built to make the next step clearer during confusing or urgent moments, without making medical decisions for people.
 
-Milo can use Gemini through the included local/server setup, never from a browser API key.
+## First pilot
 
-1. Create a free Gemini API key in [Google AI Studio](https://aistudio.google.com/app/apikey).
-2. Set `GEMINI_API_KEY` as a private environment variable (see `.env.example`).
-3. Run `npm start`.
-4. Open `http://localhost:3000`.
+The first pilot is recruiting 10–15 testers. Each tester tries one practical task, such as finding an MRI center or preparing for an ultrasound, then shares anonymous usability feedback.
 
-Without a key, Milo reports that live chat is not connected. With a key, the server calls Gemini while enforcing Milo’s navigation-only rules and approved links.
+The project does not collect names, reports, symptoms, or private health information for the pilot. Results will be published only as anonymous, aggregate findings after collection is complete.
 
-## Next Week 1 work
+## Run locally
 
-1. Finalise the founder story and About-page wording.
-2. Select a permanent logo and visual assets.
-3. Choose feedback collection/storage for the public version.
-4. Define the imaging-center data fields and verification process.
+```powershell
+cd C:\Users\danie\Documents\Scanbridge
+npm start
+```
+
+Open `http://localhost:3000`.
+
+To enable live Milo locally, set a private `GEMINI_API_KEY` environment variable. Never place the key in browser code, a committed `.env` file, or GitHub.
+
+## Deploy
+
+The project is configured for Netlify:
+
+1. Import this repository into Netlify from GitHub.
+2. Set `GEMINI_API_KEY` as a secret environment variable for the Production Functions context.
+3. Deploy from the `main` branch.
+
+Netlify hosts the static site and the private `/api/milo` function. GitHub Pages is not used for the live app because it cannot securely run the server-side Milo function.
+
+## Research and outreach
+
+- [Pre-pilot research poster](output/pdf/scanbridge-pre-pilot-poster.pdf)
+- [Impact & Pilot page](impact.html)
+
+Current poster status: **pre-pilot**. It documents the project, the planned evaluation, and verified baseline counts. It does not claim participant outcomes.
+
+## Next steps
+
+1. Recruit 10–15 pilot testers.
+2. Collect anonymous usability feedback.
+3. Publish aggregate pilot findings and approved anonymised comments.
+4. Ask a school, clinic, or medical reviewer to review one guide or support a small pilot.
+
+## License
+
+Released under the [MIT License](LICENSE).
