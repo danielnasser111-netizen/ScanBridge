@@ -25,26 +25,7 @@ The first pilot is recruiting 10–15 testers. Each tester tries one practical t
 
 The project does not collect names, reports, symptoms, or private health information for the pilot. Results will be published only as anonymous, aggregate findings after collection is complete.
 
-## Run locally
 
-```powershell
-cd C:\Users\danie\Documents\Scanbridge
-npm start
-```
-
-Open `http://localhost:3000`.
-
-To enable live Milo locally, set a private `GEMINI_API_KEY` environment variable. Never place the key in browser code, a committed `.env` file, or GitHub.
-
-## Deploy
-
-The project is configured for Netlify:
-
-1. Import this repository into Netlify from GitHub.
-2. Set `GEMINI_API_KEY` as a secret environment variable for the Production Functions context.
-3. Deploy from the `main` branch.
-
-Netlify hosts the static site and the private `/api/milo` function. GitHub Pages is not used for the live app because it cannot securely run the server-side Milo function.
 
 ## Research and outreach
 
