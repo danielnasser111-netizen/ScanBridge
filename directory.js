@@ -95,3 +95,28 @@ const directoryArabicNames=new Map([
 const renderDirectory=render;
 render=function(){centers.forEach(c=>{c.nameEn??=c.n;c.n=language==='ar'?(directoryArabicNames.get(c.nameEn)||c.nameEn):c.nameEn;});renderDirectory();};
 render();
+
+ui.en.intro = 'A pilot directory for Lebanon. Some listings link to an official source; community-added listings need confirmation by call.';
+ui.en.status = 'Pilot directory · Source status is shown on every listing · Confirm by call';
+ui.ar.intro = 'دليل تجريبي للبنان. ترتبط بعض الإدخالات بمصدر رسمي، بينما تحتاج الإدخالات المضافة من المجتمع إلى تأكيد بالاتصال.';
+ui.ar.status = 'دليل تجريبي · تظهر حالة المصدر في كل إدراج · أكّد المعلومات بالاتصال';
+const directoryTrustStyle = document.createElement('style');
+directoryTrustStyle.textContent = '.verification-pill{display:inline-flex;margin:.35rem 0 .7rem;padding:.2rem .5rem;border:1px solid var(--line);border-radius:999px;font-size:.72rem;font-weight:700}.verification-pill.official{color:#1d674f;background:#e6f4ed}.verification-pill.community{color:#765c23;background:#fff4d4}.directory-address{margin:.1rem 0 .75rem;color:var(--ink-soft);font-size:.86rem}.nearby-note{display:block;max-width:560px;color:var(--ink-soft);font-size:.76rem;line-height:1.45}';
+document.head.append(directoryTrustStyle);
+function safeDirectoryText(value){return String(value || '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));}
+function renderTrustworthyResults(){
+  const query = $('#search').value.toLowerCase(), service = $('#service').value, area = $('#area').value;
+  const found = centers.filter(center => (!query || `${center.n} ${center.a} ${center.area} ${center.street} ${center.offer} ${center.s.join(' ')}`.toLowerCase().includes(query)) && (!service || center.s.includes(service)) && (!area || center.a === area));
+  const copy = language === 'ar' ? { official:'مصدر رسمي مرتبط', community:'مضاف من المجتمع — أكّده بالاتصال', source:'المصدر الرسمي ↗', confirm:'أكّد بالاتصال' } : { official:'Official source linked', community:'Community-added — confirm by call', source:'Official source ↗', confirm:'Confirm by call' };
+  $('#results').innerHTML = found.map(center => {
+    const linked = Boolean(center.url);
+    return `<article class="center-card"><div><p class="center-area">${safeDirectoryText(center.a)} · ${safeDirectoryText(center.area)}</p><h2>${safeDirectoryText(center.n)}</h2><span class="verification-pill ${linked ? 'official' : 'community'}">${linked ? copy.official : copy.community}</span><p class="directory-address">${safeDirectoryText(center.street)}</p><p class="center-offer">${safeDirectoryText(center.offer)}</p><div class="service-tags">${center.s.map(item => `<span>${safeDirectoryText(item)}</span>`).join('')}</div></div><div class="center-actions">${center.phone ? `<a class="call-link" href="tel:${safeDirectoryText(center.phone.replace(/\s/g,''))}">${ui[language].call} ${safeDirectoryText(center.phone)}</a>` : ''}${linked ? `<a href="${safeDirectoryText(center.url)}" target="_blank" rel="noopener noreferrer">${copy.source}</a>` : `<span class="confirm-note">${copy.confirm}</span>`}</div></article>`;
+  }).join('') || `<p class="no-results">${language === 'ar' ? 'لا توجد مراكز مطابقة بعد.' : 'No matching centers yet.'}</p>`;
+}
+setTimeout(() => {
+  filter = renderTrustworthyResults;
+  render();
+  ['#search','#service','#area'].forEach(id => $(id).addEventListener(id === '#search' ? 'input' : 'change', renderTrustworthyResults));
+  const row = document.querySelector('.nearby-row');
+  if (row && !document.querySelector('.nearby-note')) { const note = document.createElement('small'); note.className = 'nearby-note'; note.textContent = language === 'ar' ? 'المسافة تقدير تقريبي لمركز المنطقة، وليست اتجاهات إلى المنشأة ولا ينبغي استخدامها للطوارئ.' : 'Distance is a rough area-centre estimate, not facility directions, and should not be used for emergencies.'; row.append(note); }
+}, 25);

@@ -23,7 +23,12 @@ const facilityContext = [
   { key: 'zhumc', city: 'Beirut', area: 'Jnah' }, { key: 'monla', city: 'Tripoli', area: 'Tripoli' },
   { key: 'dallaa', city: 'Saida', area: 'Saida' }
 ];
-const urgentPattern = /chest pain|trouble breathing|can.t breathe|unconscious|seizure|severe bleeding|stroke|suicid|not breathing|صعوبة.*تنفس|ضيق.*تنفس|لا.*تتنفس|ألم.*صدر|نزيف.*شديد|فقدان.*وعي|تشنج|جلطة/iu;
+const urgentPattern = /chest pain|trouble breathing|shortness of breath|difficulty breathing|struggling to breathe|can.t breathe|not breathing|blue lips|unconscious|collapse|seizure|severe bleeding|stroke|suicid|overdose|poison|anaphyla|صعوبة.*تنفس|ضيق.*تنفس|لا.*تتنفس|لا.*يتنفس|زرقة.*شفا|ألم.*صدر|نزيف.*شديد|فقدان.*وعي|إغماء|تشنج|جلطة|تسمم|حساسية.*شديدة/iu;
+const rateWindows = new Map();
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT = 12;
+function clientKey(req){return String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').split(',')[0].trim();}
+function allowRequest(req){const key=clientKey(req),now=Date.now(),recent=(rateWindows.get(key)||[]).filter(time=>now-time<RATE_WINDOW_MS);if(recent.length>=RATE_LIMIT){rateWindows.set(key,recent);return false;}recent.push(now);rateWindows.set(key,recent);return true;}
 
 function send(res, status, data, type = 'application/json') {
   res.writeHead(status, { 'content-type': `${type}; charset=utf-8`, 'cache-control': 'no-store' });
@@ -42,7 +47,7 @@ function urgentReply(language, message) {
 async function miloReply(message, language, history = []) {
   if (urgentPattern.test(message)) return urgentReply(language, message);
   if (!process.env.GEMINI_API_KEY) throw new Error('MILO_LLM_UNAVAILABLE');
-  const instructions = `You are Milo, ScanBridge's patient-navigation assistant for Lebanon. Respond naturally to the user's actual words and remember the supplied conversation. Be warm, calm, professional, concise, and especially reassuring when someone sounds frightened. You are not a clinician: never diagnose, confirm a suspected condition, prescribe treatment, decide that someone needs a scan, or interpret a report. Explain that a clinician decides whether imaging is needed. For urgent danger, clearly recommend Lebanese Red Cross 140 or the nearest emergency department and do not delay for chat. Use a stated city/area to recommend only facilities from this approved list, describing them as area-based options rather than guaranteed closest: ${JSON.stringify(facilityContext)}. Approved route keys: ${Object.keys(routes).join(', ')}. Return strict JSON only: {"message":"natural response","routes":["approved_key"]}. Use ${language === 'ar' ? 'Arabic' : 'English'}. Never invent a facility, URL, distance, emergency number, or medical claim.`;
+  const instructions = `You are Milo, ScanBridge's patient-navigation assistant for Lebanon. Respond naturally to the user's actual words and remember the supplied conversation. Be warm, calm, professional, concise, and especially reassuring when someone sounds frightened. You are not a clinician: never diagnose, confirm a suspected condition, prescribe treatment, decide that someone needs a scan, or interpret a report. Explain that a clinician decides whether imaging is needed. For urgent danger, clearly recommend Lebanese Red Cross 140 or the nearest emergency department and do not delay for chat. Use a stated city/area to recommend only facilities from this small approved source-linked list, describing them as area-based options rather than guaranteed closest or a complete local list: ${JSON.stringify(facilityContext)}. If the user's area is not in that list, guide them to the directory instead. Approved route keys: ${Object.keys(routes).join(', ')}. Return strict JSON only: {"message":"natural response","routes":["approved_key"]}. Use ${language === 'ar' ? 'Arabic' : 'English'}. Never invent a facility, URL, distance, emergency number, medical claim, or clinical recommendation.`;
   const transcript = [...history.slice(-10), { role: 'user', content: message }]
     .map(item => `${item.role === 'assistant' ? 'Milo' : 'User'}: ${item.content}`)
     .join('\n');
@@ -61,12 +66,15 @@ async function miloReply(message, language, history = []) {
     .join('');
   const raw = String(output.output_text || output.text || stepText || '').replace(/^```json\s*|\s*```$/g, '').trim();
   const parsed = JSON.parse(raw);
-  return { message: String(parsed.message || ''), routes: Array.isArray(parsed.routes) ? parsed.routes.filter(key => routes[key]) : [] };
+  const replyMessage = String(parsed.message || '').replace(/\u0000/g, '').trim().slice(0, 1400);
+  if (!replyMessage) throw new Error('MILO_EMPTY_RESPONSE');
+  return { message: replyMessage, routes: Array.isArray(parsed.routes) ? parsed.routes.filter(key => routes[key]) : [] };
 }
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml' };
 http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   if (req.method === 'POST' && url.pathname === '/api/milo') {
+    if (!allowRequest(req)) return send(res, 429, { error: 'RATE_LIMITED' });
     let body = ''; req.on('data', chunk => { body += chunk; if (body.length > 8000) req.destroy(); });
     req.on('end', async () => {
       try {
@@ -77,8 +85,10 @@ http.createServer(async (req, res) => {
       } catch (error) { send(res, 503, { error: 'MILO_UNAVAILABLE' }); }
     }); return;
   }
-  const safePath = path.normalize(url.pathname === '/' ? '/index.html' : url.pathname).replace(/^([.][.][/\\])+/, '');
-  const file = path.join(root, safePath);
-  if (!file.startsWith(root)) return send(res, 403, 'Forbidden', 'text/plain');
+  const requestedPath = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\/+/, ''));
+  const isTopLevelPublicFile = /^[a-z0-9-]+\.(html|js|css)$/i.test(requestedPath);
+  const isPublicAsset = /^assets\/[a-z0-9._-]+\.(png|svg)$/i.test(requestedPath);
+  if (!isTopLevelPublicFile && !isPublicAsset) return send(res, 404, 'Not found', 'text/plain');
+  const file = path.join(root, requestedPath);
   fs.readFile(file, (error, data) => error ? send(res, 404, 'Not found', 'text/plain') : send(res, 200, data, types[path.extname(file)] || 'application/octet-stream'));
 }).listen(port, () => console.log(`ScanBridge running at http://localhost:${port}`));

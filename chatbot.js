@@ -3,13 +3,13 @@
 
   const copy = {
     en: {
-      name: 'Milo', role: 'Live ScanBridge guide', hello: 'Welcome — I’m Milo. I can guide you through ScanBridge, recommend the right page or tool, and explain what each feature is for. I do not provide medical advice, diagnosis, or treatment guidance.',
-      placeholder: 'Ask Milo where to start…', send: 'Send', close: 'Close chat', thinking: 'Milo is finding the right ScanBridge tool…', unavailable: 'Milo’s live language model is not connected right now. Please try again shortly.',
+      name: 'Milo', role: 'AI ScanBridge guide', hello: 'Welcome — I’m Milo. I can guide you through ScanBridge, recommend the right page or tool, and explain what each feature is for. I do not provide medical advice, diagnosis, or treatment guidance.', privacy: 'Privacy note: do not share names, contact details, reports, images, or identifiable health information. Messages are sent to Google Gemini to generate a response and are not stored by ScanBridge.',
+      placeholder: 'Ask Milo where to start…', send: 'Send', close: 'Close chat', thinking: 'Milo is finding the right ScanBridge tool…', unavailable: 'Milo’s live language model is not connected right now. Please try again shortly.', rateLimited: 'Milo is taking a short pause to protect the pilot. Please try again in a few minutes.',
       chips: ['Scan guides', 'Find a center', 'Emergency card', 'Report helper'], prompts: ['Where can I find the scan guides?', 'Help me find an imaging center.', 'Open the emergency preparation card.', 'What is the report helper?']
     },
     ar: {
-      name: 'مايلو', role: 'دليل ScanBridge المباشر', hello: 'مرحباً، أنا مايلو. أستطيع إرشادك داخل ScanBridge واقتراح الصفحة أو الأداة المناسبة وشرح هدف كل ميزة. لا أقدّم نصيحة طبية أو تشخيصاً أو إرشادات علاجية.',
-      placeholder: 'اسأل مايلو من أين تبدأ…', send: 'إرسال', close: 'إغلاق المحادثة', thinking: 'مايلو يبحث عن أداة ScanBridge المناسبة…', unavailable: 'نموذج مايلو المباشر غير متصل الآن. حاول مرة أخرى بعد قليل.',
+      name: 'مايلو', role: 'دليل ScanBridge بالذكاء الاصطناعي', hello: 'مرحباً، أنا مايلو. أستطيع إرشادك داخل ScanBridge واقتراح الصفحة أو الأداة المناسبة وشرح هدف كل ميزة. لا أقدّم نصيحة طبية أو تشخيصاً أو إرشادات علاجية.', privacy: 'ملاحظة خصوصية: لا تشارك أسماء أو بيانات اتصال أو تقارير أو صوراً أو معلومات صحية يمكن التعرف إلى صاحبها. تُرسل الرسائل إلى Google Gemini لتوليد الرد ولا يحفظها ScanBridge.',
+      placeholder: 'اسأل مايلو من أين تبدأ…', send: 'إرسال', close: 'إغلاق المحادثة', thinking: 'مايلو يبحث عن أداة ScanBridge المناسبة…', unavailable: 'نموذج مايلو المباشر غير متصل الآن. حاول مرة أخرى بعد قليل.', rateLimited: 'يأخذ مايلو استراحة قصيرة لحماية التجربة. حاول مرة أخرى خلال بضع دقائق.',
       chips: ['أدلة الفحوصات', 'ابحث عن مركز', 'بطاقة الطوارئ', 'مساعد التقرير'], prompts: ['أين أجد أدلة الفحوصات؟', 'ساعدني في العثور على مركز تصوير.', 'افتح بطاقة الاستعداد للطوارئ.', 'ما هو مساعد التقرير؟']
     }
   };
@@ -92,12 +92,12 @@
     try {
       if (location.protocol === 'file:') throw new Error('LOCAL_PREVIEW');
       const response = await fetch('/api/milo', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message: value, language: locale, history: conversation.slice(0, -1) }) });
-      if (!response.ok) throw new Error('MILO_UNAVAILABLE');
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'MILO_UNAVAILABLE');
       typing.remove(); conversation.push({ role: 'assistant', content: data.message });
       addMessage(data.message, false, (data.links || []).map(link => [link.href, link[locale] || link.en]));
-    } catch {
-      typing.remove(); conversation.pop(); addMessage(copy[locale].unavailable);
+    } catch (error) {
+      typing.remove(); conversation.pop(); addMessage(error.message === 'RATE_LIMITED' ? copy[locale].rateLimited : copy[locale].unavailable);
     } finally {
       launch.classList.remove('milo-thinking');
     }
@@ -117,7 +117,7 @@
   launch.onclick = () => {
     const isOpening = panel.hidden;
     panel.hidden = !panel.hidden; launch.classList.toggle('milo-open', !panel.hidden); launch.setAttribute('aria-expanded', String(!panel.hidden));
-    if (!panel.hidden && !messages.children.length) addMessage(copy[language('')].hello);
+    if (!panel.hidden && !messages.children.length) { const locale = language(''); addMessage(copy[locale].hello); addMessage(copy[locale].privacy); }
     if (!panel.hidden) input.focus();
     if (isOpening) dismissMiloIntro();
   };

@@ -26,7 +26,22 @@ const translations = {
 };
 
 translations.ar.openDirectory = 'ابحث في الدليل ←';
-translations.ar.navImpact = 'الأثر والتجربة';
+translations.ar.navImpact = 'الإطلاق والأثر';
+translations.ar.privacy = 'الخصوصية';
+translations.ar.terms = 'الشروط';
+translations.ar.contact = 'تواصل معنا';
+translations.ar.feedbackEyebrow = 'ساعدنا على التحسين';
+translations.ar.feedbackTitle = 'ما الذي سيجعل استخدام ScanBridge أوضح أو أكثر أماناً؟';
+translations.ar.feedbackText = 'تساعدنا ملاحظاتك على تحسين الخدمة العامة. لن تستغرق أكثر من دقيقة.';
+translations.ar.helpBuild = 'ساعدنا على تحسين ScanBridge.';
+translations.ar.directoryProgress = '58 إدراجاً';
+translations.ar.firstGuide = 'ابدأ بدليل واضح';
+translations.ar.centerText = 'استخدم الدليل التجريبي لاستكشاف مراكز التصوير حسب الموقع ونوع الفحص. توضّح كل بطاقة حالة مصدرها كي تعرف ما يجب تأكيده بالاتصال.';
+translations.ar.directoryProgress = '58 إدراجاً تجريبياً';
+translations.ar.directoryText = 'تحقّق من حالة مصدر كل إدراج وأكّد المعلومات بالاتصال.';
+translations.ar.emergencyText = 'تساعد بطاقة الطوارئ العائلات على جمع المعلومات المهمة قبل التوجه إلى الرعاية العاجلة أو قسم الطوارئ: الأدوية والحساسية والأعراض والتقارير السابقة والأسئلة.';
+translations.ar.callout = 'إذا اعتقدت أن شخصاً ما قد يمر بحالة طبية طارئة، اتصل بالصليب الأحمر اللبناني على 140 أو توجّه إلى أقرب قسم طوارئ الآن.';
+translations.ar.consent = 'لن أدرج أسماء أو بيانات اتصال أو أعراضاً أو تقارير أو صوراً أو أموراً عاجلة. هذه الاستمارة ليست للنصيحة الطبية أو للطوارئ.';
 translations.ar.aboutEyebrow = 'كيف بدأت ScanBridge؟';
 translations.ar.aboutTitle = 'بدأت برحلة مخيفة ومن دون مكان واضح للذهاب إليه.';
 translations.ar.aboutText = 'بدأ مشروع ScanBridge بعد أن كاد فتى أن يفقد والده أثناء قيادتهما بعيداً عن المنزل. في لحظة مخيفة، لم يعرفا بسرعة إلى أين يذهبان أو أي مستشفى يمكنه المساعدة. جعل عدم اليقين كل شيء أصعب. بُني ScanBridge لمساعدة العائلات في العثور على خطوة تالية أوضح في المواقف العاجلة أو المربكة، من دون أن يحل محل خدمات الطوارئ أو الأطباء.';
@@ -77,14 +92,25 @@ dialog.addEventListener('click', (event) => {
   if (event.target === dialog) dialog.close();
 });
 
-feedbackForm.addEventListener('submit', (event) => {
+feedbackForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const feedback = Object.fromEntries(new FormData(feedbackForm));
-  const existing = JSON.parse(localStorage.getItem('scanbridge-feedback') || '[]');
-  existing.push({ ...feedback, submittedAt: new Date().toISOString() });
-  localStorage.setItem('scanbridge-feedback', JSON.stringify(existing));
-  feedbackForm.reset();
-  status.textContent = 'Thank you — your feedback has been saved on this device for this early prototype.';
+  const submit = feedbackForm.querySelector('[type="submit"]');
+  if (location.protocol === 'file:' || location.hostname === 'localhost') {
+    status.textContent = 'Feedback collection works on the published ScanBridge website. Please use the public site to send your response.';
+    return;
+  }
+  submit.disabled = true;
+  status.textContent = 'Sending your feedback…';
+  try {
+    const response = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(feedbackForm)).toString() });
+    if (!response.ok) throw new Error('FORM_SUBMISSION_FAILED');
+    feedbackForm.reset();
+    status.textContent = 'Thank you — your feedback was sent to the ScanBridge team.';
+  } catch {
+    status.textContent = 'Your feedback could not be sent. Please try again from the published ScanBridge website.';
+  } finally {
+    submit.disabled = false;
+  }
 });
 
 menuToggle.addEventListener('click', () => {

@@ -2,44 +2,43 @@
 
 **Understand. Prepare. Follow up.**
 
-ScanBridge is a youth-led, safety-first navigation project for medical imaging in Lebanon. It helps patients and families prepare for scans, find imaging services, organise practical emergency information, and navigate the platform with Milo, its bilingual chat assistant.
+ScanBridge is a youth-led, safety-first public navigation project for medical imaging in Lebanon. It helps patients and families prepare for scans, find imaging facilities to contact, create a practical emergency-information card, and navigate the site with Milo, its bilingual chat assistant.
 
-> ScanBridge provides general education and navigation only. It does not diagnose conditions, interpret images or reports, recommend treatment, or replace doctors or emergency services.
+> ScanBridge provides general education and navigation only. It does not diagnose conditions, interpret images or reports, recommend treatment, or replace doctors or emergency services. In an emergency, call the Lebanese Red Cross on **140** or seek urgent care.
 
-## What is live in the pilot
+## Public launch
+
+The initial pilot is complete and ScanBridge is now publicly available. The service remains transparent about its limits: center listings need confirmation by phone, Milo is not a clinician, and no pilot outcome is published unless it can be shared anonymously and responsibly.
+
+## What is available
 
 - 6 patient-friendly ScanPrep guides, including contrast-material guidance
-- 58 source-linked imaging facilities across Lebanon
+- 58 imaging-facility listings across Lebanon, with source status shown on every listing
 - English and Arabic support, with light and dark modes
-- Emergency preparation card, generated privately in the browser
+- A local-only emergency preparation card that can be printed or downloaded
 - Milo, a safety-bounded Gemini-powered navigation assistant
-- Public Impact & Pilot page with transparent baseline metrics
+- Privacy Policy, Terms of Use, and a public contact form
 
-## Why it exists
+## Privacy and forms
 
-ScanBridge began after a frightening drive in which a family could not quickly work out where to go for help. The project is built to make the next step clearer during confusing or urgent moments, without making medical decisions for people.
+- The emergency card remains in the user’s browser unless they choose to print or download it.
+- Milo messages are sent to Google Gemini to generate a response. Do not enter names, contact details, reports, images, or identifiable health information.
+- Feedback and contact forms are received through Netlify Forms. Before production deployment, open **Netlify → Forms**, enable form detection, and redeploy.
+- The public privacy notice is at [privacy.html](privacy.html); terms are at [terms.html](terms.html).
 
-## First pilot
+## Public materials
 
-The first pilot is recruiting 10–15 testers. Each tester tries one practical task, such as finding an MRI center or preparing for an ultrasound, then shares anonymous usability feedback.
+- [Launch overview poster](output/pdf/scanbridge-launch-overview.pdf)
+- [Impact & launch page](impact.html)
+- [Privacy Policy](privacy.html)
+- [Terms of Use](terms.html)
 
-The project does not collect names, reports, symptoms, or private health information for the pilot. Results will be published only as anonymous, aggregate findings after collection is complete.
+## Maintaining the project
 
-
-
-## Research and outreach
-
-- [Pre-pilot research poster](output/pdf/scanbridge-pre-pilot-poster.pdf)
-- [Impact & Pilot page](impact.html)
-
-Current poster status: **pre-pilot**. It documents the project, the planned evaluation, and verified baseline counts. It does not claim participant outcomes.
-
-## Next steps
-
-1. Recruit 10–15 pilot testers.
-2. Collect anonymous usability feedback.
-3. Publish aggregate pilot findings and approved anonymised comments.
-4. Ask a school, clinic, or medical reviewer to review one guide or support a small pilot.
+1. Confirm directory changes with the facility before updating a listing.
+2. Review feedback and contact submissions in Netlify Forms; delete information that is no longer needed.
+3. Keep the Gemini API key only in hosting environment variables, never in the repository or browser code.
+4. Publish only anonymous, aggregate pilot learnings if you have real, consented data to support them.
 
 ## License
 
