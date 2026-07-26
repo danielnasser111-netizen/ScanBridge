@@ -70,7 +70,7 @@ async function miloReply(message, language, history = []) {
   if (!replyMessage) throw new Error('MILO_EMPTY_RESPONSE');
   return { message: replyMessage, routes: Array.isArray(parsed.routes) ? parsed.routes.filter(key => routes[key]) : [] };
 }
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml' };
+const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
 http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   if (req.method === 'POST' && url.pathname === '/api/milo') {
@@ -87,7 +87,7 @@ http.createServer(async (req, res) => {
   }
   const requestedPath = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\/+/, ''));
   const isTopLevelPublicFile = /^[a-z0-9-]+\.(html|js|css)$/i.test(requestedPath);
-  const isPublicAsset = /^assets\/[a-z0-9._-]+\.(png|svg)$/i.test(requestedPath);
+  const isPublicAsset = /^assets\/[a-z0-9._-]+\.(png|webp|svg)$/i.test(requestedPath);
   if (!isTopLevelPublicFile && !isPublicAsset) return send(res, 404, 'Not found', 'text/plain');
   const file = path.join(root, requestedPath);
   fs.readFile(file, (error, data) => error ? send(res, 404, 'Not found', 'text/plain') : send(res, 200, data, types[path.extname(file)] || 'application/octet-stream'));

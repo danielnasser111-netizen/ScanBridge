@@ -46,17 +46,96 @@ translations.ar.aboutEyebrow = 'كيف بدأت ScanBridge؟';
 translations.ar.aboutTitle = 'بدأت برحلة مخيفة ومن دون مكان واضح للذهاب إليه.';
 translations.ar.aboutText = 'بدأ مشروع ScanBridge بعد أن كاد فتى أن يفقد والده أثناء قيادتهما بعيداً عن المنزل. في لحظة مخيفة، لم يعرفا بسرعة إلى أين يذهبان أو أي مستشفى يمكنه المساعدة. جعل عدم اليقين كل شيء أصعب. بُني ScanBridge لمساعدة العائلات في العثور على خطوة تالية أوضح في المواقف العاجلة أو المربكة، من دون أن يحل محل خدمات الطوارئ أو الأطباء.';
 
+Object.assign(translations.ar, {
+  heroEyebrow: 'للمرضى والعائلات في لبنان',
+  heroTitle: 'التصوير الطبي، بطريقة أسهل للفهم.',
+  heroIntro: 'استعد للفحص، وابحث عن مركز، واعرف ما الذي تسأل عنه — بمعلومات واضحة بالعربية والإنجليزية.',
+  exploreGuides: 'استعد للفحص',
+  urgentHelp: 'هل الحالة عاجلة؟',
+  urgentHelpText: 'اتصل بالصليب الأحمر اللبناني على 140 أو توجّه إلى أقرب قسم طوارئ.',
+  heroLive: 'ScanBridge متاح الآن',
+  chooseNeed: 'ما الذي تحتاج إليه الآن؟',
+  scanPrepAction: 'استعد للفحص',
+  scanPrepActionText: 'أدلة بسيطة للأشعة السينية وCT وMRI والألتراساوند وغيرها.',
+  directoryAction: 'ابحث عن مركز تصوير',
+  directoryActionText: 'ابحث بحسب المدينة ونوع الفحص والموقع.',
+  emergencyAction: 'أنشئ بطاقة طوارئ',
+  emergencyActionText: 'اجمع الأدوية والحساسية والمعلومات المهمة في مكان واحد.',
+  miloReady: 'ميلو جاهز لإرشادك.',
+  miloReadyText: 'افتح الدليل الودود في الزاوية عندما تحتاج إلى مساعدة في استخدام ScanBridge.',
+  lebanonText: 'معلومات وصول محلية للمرضى والعائلات.',
+  languageTrust: 'العربية + الإنجليزية',
+  languageTrustText: 'غيّر اللغة والمظهر في أي وقت.',
+  safetyFirstText: 'تثقيف وتوجيه — وليس تشخيصاً.',
+  prepareLabel: 'استعد',
+  guidesTitle: 'اعرف ما سيحدث قبل موعدك.',
+  guidesText: 'اختر فحصك لشرح قصير عن التحضير ومادة التباين وما يحدث داخل الغرفة والأسئلة التي يمكنك طرحها.',
+  xrayText: 'ما الذي ترتديه وتحضره وتتوقعه.',
+  ultrasoundText: 'الصيام والماء وما الذي يحدث.',
+  ctText: 'التحضير والضوضاء ومادة التباين.',
+  contrastIncluded: 'شرح مادة التباين أولاً',
+  allGuides: 'شاهد كل أدلة الفحوصات',
+  findLabel: 'ابحث',
+  centerTitle: 'ابحث في دليل مراكز التصوير في لبنان من دون تخمين.',
+  centerText: 'صفِّ المراكز بحسب المنطقة ونوع الفحص، واستخدم موقعك لترتيب الخيارات القريبة، واطّلع على الخدمات المعلنة. أكّد التفاصيل مباشرة قبل الزيارة.',
+  directoryStatListings: 'إدراجاً للمرافق',
+  directoryStatListingsText: 'في عدة مناطق لبنانية',
+  directoryStatLocation: 'ترتيب حسب القرب',
+  directoryStatLocationText: 'عندما تختار مشاركة موقعك',
+  directoryStatServices: 'فلاتر للفحوصات',
+  directoryStatServicesText: 'لتضييق القائمة بسرعة',
+  openDirectory: 'ابحث في الدليل',
+  directoryPreview: 'معاينة دليل المراكز',
+  nearMe: 'قربي',
+  exampleCenter: 'مركز تصوير',
+  exampleCenterText: 'المنطقة · MRI · CT · أشعة سينية',
+  exampleCenterTextTwo: 'المنطقة · ألتراساوند · تصوير الثدي',
+  readyLabel: 'كن مستعداً',
+  emergencyTitle: 'اجمع المعلومات المهمة عندما يكون الوقت مهماً.',
+  emergencyText: 'أنشئ بطاقة خاصة تضم الأدوية والحساسية والأعراض والتقارير السابقة ورقم شخص للطوارئ. يمكنك تنزيلها أو طباعتها أو مشاركتها برمز QR.',
+  shapeTool: 'أنشئ بطاقة الطوارئ',
+  emergencyCardLabel: 'بطاقة الاستعداد للطوارئ',
+  medicationsLabel: 'الأدوية',
+  allergiesLabel: 'الحساسية',
+  symptomsLabel: 'الأعراض الأساسية',
+  contactLabel: 'شخص للطوارئ',
+  readyToAdd: 'جاهز للإضافة',
+  notProvidedLabel: 'غير متوفر',
+  family: 'مصمم للعائلات',
+  familyText: 'لغة بسيطة وخطوات عملية.',
+  seeImpact: 'اطّلع على أثر ScanBridge',
+  feedbackEyebrow: 'ساعدنا على التحسين',
+  feedbackTitle: 'ما الذي سيجعل ScanBridge أوضح أو أكثر أماناً؟',
+  feedbackText: 'تساعد ملاحظاتك على تحسين هذه الخدمة العامة. من فضلك لا ترسل معلومات طبية خاصة أو أموراً عاجلة.',
+  mobileHeroIntro: 'أدلة للفحوصات، ومراكز قريبة، وبطاقة للطوارئ — خطوة واضحة واحدة.',
+  quickTools: 'افتح الأدوات السريعة',
+  miloPointer: 'تحتاج مساعدة؟ اسأل ميلو',
+  mobileGuidesTitle: 'ما الذي ترتديه وتحضره وتتوقعه.',
+  mobileGuidesSubtitle: 'اعرف ما سيحدث قبل موعد الفحص.',
+  mobileDirectoryTitle: 'ابحث عن مركز تصوير.',
+  mobileDirectorySubtitle: 'اضغط على الباحث للبحث بحسب الفحص أو المدينة أو الأقرب إليك.',
+  mobileEmergencyTitle: 'أنشئ بطاقة طوارئ خلال ثوانٍ.',
+  mobileEmergencySubtitle: 'ابدأ بـ «غير متوفر». غيّر فقط المعلومات التي تعرفها، ثم احفظ البطاقة أو شاركها.',
+  mobileEmergencyDefaults: 'تبدأ الحقول بخيار «غير متوفر».',
+  mobileFeedbackTitle: 'ساعد في جعل ScanBridge أوضح.'
+});
+
 function setLanguage(language) {
   const dictionary = translations[language];
   document.documentElement.lang = language === 'ar' ? 'ar' : 'en';
   document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+  const heroLocale = language === 'ar' ? 'Ar' : 'En';
+  const mobileHeroSource = document.querySelector('[data-mobile-hero-source]');
+  const mobileHeroImage = document.querySelector('[data-mobile-hero-image]');
+  if (mobileHeroSource) mobileHeroSource.srcset = mobileHeroSource.dataset[`src${heroLocale}`];
+  if (mobileHeroImage) mobileHeroImage.src = mobileHeroImage.dataset[`src${heroLocale}`];
   document.querySelectorAll('[data-i18n]').forEach((element) => {
     const key = element.dataset.i18n;
-    element.textContent = language === 'ar' ? dictionary[key] : element.dataset.original;
+    element.textContent = language === 'ar' ? (dictionary[key] || element.dataset.original) : element.dataset.original;
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
     const key = element.dataset.i18nPlaceholder;
-    element.placeholder = language === 'ar' ? dictionary[key] : element.dataset.originalPlaceholder;
+    element.placeholder = language === 'ar' ? (dictionary[key] || element.dataset.originalPlaceholder) : element.dataset.originalPlaceholder;
   });
   languageToggle.textContent = language === 'ar' ? 'English' : 'العربية';
   languageToggle.setAttribute('aria-label', language === 'ar' ? 'Switch to English' : 'Switch to Arabic');
@@ -81,6 +160,50 @@ setTheme(localStorage.getItem('scanbridge-theme') || (window.matchMedia('(prefer
 
 languageToggle.addEventListener('click', () => setLanguage(document.documentElement.lang === 'ar' ? 'en' : 'ar'));
 themeToggle.addEventListener('click', () => setTheme(document.body.classList.contains('dark-mode') ? 'light' : 'dark'));
+
+const mobileToolsToggle = document.querySelector('[data-mobile-tools-toggle]');
+const mobileToolsPanel = document.querySelector('#mobile-tools-panel');
+const mobileLandingQuery = window.matchMedia('(max-width: 600px)');
+const watchMedia = (query, callback) => query.addEventListener ? query.addEventListener('change', callback) : query.addListener(callback);
+
+function closeMobileTools() {
+  if (!mobileToolsToggle || !mobileToolsPanel) return;
+  mobileToolsToggle.setAttribute('aria-expanded', 'false');
+  mobileToolsPanel.hidden = true;
+}
+
+if (mobileToolsToggle && mobileToolsPanel) {
+  mobileToolsToggle.addEventListener('click', () => {
+    const willOpen = mobileToolsPanel.hidden;
+    mobileToolsPanel.hidden = !willOpen;
+    mobileToolsToggle.setAttribute('aria-expanded', String(willOpen));
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !mobileToolsPanel.hidden) {
+      closeMobileTools();
+      mobileToolsToggle.focus();
+    }
+  });
+  watchMedia(mobileLandingQuery, (event) => { if (!event.matches) closeMobileTools(); });
+}
+
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const landingRevealItems = document.querySelectorAll('.landing-band > .landing-shell, .hero-trust-strip, .home-safety > .landing-shell');
+if (!reducedMotionQuery.matches && landingRevealItems.length && 'IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      revealObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+
+  landingRevealItems.forEach((element) => element.classList.add('landing-reveal'));
+  window.requestAnimationFrame(() => {
+    document.body.classList.add('motion-ready');
+    landingRevealItems.forEach((element) => revealObserver.observe(element));
+  });
+}
 
 feedbackButtons.forEach((button) => {
   button.addEventListener('click', () => dialog.showModal());
