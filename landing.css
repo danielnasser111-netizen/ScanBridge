@@ -847,8 +847,11 @@ html[dir="rtl"] .home-page .mobile-tools-panel > a > svg:last-child { transform:
     isolation: isolate;
     display: flex;
     flex-direction: column;
+    /* Keep the illustrated hero stable while Safari/Instagram hide or reveal
+       their browser controls. `dvh` changes during scroll and made the art
+       appear to zoom; `lvh` uses the largest available mobile viewport. */
     min-height: calc(100vh - 64px);
-    min-height: calc(100dvh - 64px - env(safe-area-inset-top));
+    min-height: calc(100lvh - 64px - env(safe-area-inset-top));
     padding-top: 1.35rem;
     padding-right: max(1.15rem, env(safe-area-inset-right));
     padding-bottom: calc(1.1rem + env(safe-area-inset-bottom));
